@@ -13,10 +13,10 @@ program.parse(process.argv)
 const argv = program.opts()
 
 // TODO: рефакторить
-async function invokeAction({ action, id, name, email, phone }) {
+ function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case 'list':
-        contacts.listContacts().then(r => console.table(r))
+        contacts.listContacts()
       break
 
     case 'get':
@@ -24,12 +24,12 @@ async function invokeAction({ action, id, name, email, phone }) {
       break
 
     case 'add':
-       await contacts.addContact(name, email, phone)
+        contacts.addContact(name, email, phone)
         contacts.listContacts().then(r => console.table(r))
       break
 
     case 'remove':
-       await contacts.removeContact(id)
+        contacts.removeContact(id)
         contacts.listContacts().then(r => console.table(r))
       break
 
