@@ -13,7 +13,7 @@ program.parse(process.argv)
 const argv = program.opts()
 
 // TODO: рефакторить
- function invokeAction({ action, id, name, email, phone }) {
+function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case 'list':
         contacts.listContacts()
@@ -25,12 +25,10 @@ const argv = program.opts()
 
     case 'add':
         contacts.addContact(name, email, phone)
-        contacts.listContacts().then(r => console.table(r))
       break
 
     case 'remove':
         contacts.removeContact(id)
-        contacts.listContacts().then(r => console.table(r))
       break
 
     default:
