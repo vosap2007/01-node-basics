@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const shortid = require('shortid')
 const contactsPath = path.join('db', 'contacts.json')
 //const contactsPath = path.join(__dirname, './bd/contacts.json')
 //const contactsPath = path.resolve('./db/contacts.json')
@@ -40,24 +41,52 @@ const contactsPath = path.join('db', 'contacts.json')
 }
 
 function addContact(name, email, phone) {
-        fs.appendFile(contactsPath, (name, email, phone), function(error){
-          if(error) {
-            console.log(err.message)
-          }
-          
-          let contact = fs.readFileSync(contactsPath, "utf8");
-          console.table(JSON.parse(contact));
-      });
-    }
+  //const id = shortid.generate()
+  //const contact = {name, email, phone, id}
+  const contact = { id: shortid.generate(), name: name, email: email, phone: phone };
 
-  function removeContact(contactId) {
-    fs.unlink(contactId, (err, data) => {
+  fs.readFile(contactsPath, (err, data) => {
+      if(err) 
+      return console.error(err.message);
+
+      let contacts = JSON.parse(data)
+      let newArray = contacts.concat(contact);
+      
+      fs.writeFile(contactsPath, JSON.stringify(newArray), (err) => {
+        if(err) 
+        return console.error(err.message)
+        console.table(newArray);
+  });
+})}
+
+   /* fs.writeFile(file, JSON.stringify(data), callback)
+
+    function addContact(name, email, phone) {
+      fs.writeFileSync(contactsPath, (err, data) => {
         if(err) {
           console.log(err.message)
         }
-        console.table(JSON.parse(data.toString()));
+        console.log(JSON.parse(data.toString()))
     })
-  }
+  }*/
+
+  function removeContact(contactId) {
+    fs.readFile(contactsPath, (err, data) => {
+      if(err) 
+      return console.error(err.message);
+
+      let contacts = JSON.parse(data)
+      //const newArray = contacts.filter(({id})=>{id !== contactId})
+      //const newArray = contacts.filter(({id})=>{return id !== contactId})
+      const newArray = contacts.filter(({id})=>id !== contactId)
+
+      fs.writeFile(contactsPath, JSON.stringify(newArray), (err) => {
+        if(err) 
+        return console.error(err.message)
+        console.table(newArray);
+  });
+})
+}
   
   module.exports = {
     listContacts,
